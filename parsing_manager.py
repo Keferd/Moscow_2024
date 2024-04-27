@@ -48,11 +48,11 @@ class ParsingManager:
                 if link_response.status_code == 200:
                     link_soup = BeautifulSoup(link_response.text, 'html.parser')
 
-                    divs = link_soup.find_all('div', class_=lambda x: x and (
+                    key_text_divs = link_soup.find_all('div', class_=lambda x: x and (
                             'gkb-promo__title' in x
                             or 'gkb-promo__text' in x
                             or "gkb-promo__tag-wrapper" in x
-                            or "gkb-about__column" in x
+                            # or "gkb-about__column" in x
                             or "gkb-acc__wrapper" in x
                             or "resume-update__content-container" in x
                             or "cover__content" in x
@@ -66,20 +66,20 @@ class ParsingManager:
                             or "training-program__accordion" in x
                             or "gkb-spec-po__card" in x))
 
-                    parsing_text = link_soup.get_text(separator=" ", strip=True)
+                    parsing_text = ' '.join(div.get_text(separator=" ", strip=True) for div in key_text_divs)
                     texts[link_url] = preprocess_text(parsing_text)
 
 
-                    divs = link_soup.find_all('div', class_=lambda x: x and (
+                    key_skills_divs = link_soup.find_all('div', class_=lambda x: x and (
                             'promo-tech__item' in x
                             or 'learn-instruments__item' in x
                             or "resume-instruments__wrapper" in x
                             or "gkb-promo__tag-wrapper" in x))
 
-                    if not divs:
+                    if not key_skills_divs:
                         skills[link_url].add("No stacks")
 
-                    for div in divs:
+                    for div in key_skills_divs:
                         spans = div.find_all('span')
                         for span in spans:
                             if span.text.strip() != 'и другие':
