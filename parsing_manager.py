@@ -1,6 +1,7 @@
 import requests
+import pickle
 from bs4 import BeautifulSoup
-from text_preprocessing import preprocess_text, remove_punct, extract_number, clear_description
+from text_preprocessing import preprocess_text, remove_punct, extract_number, clear_description, heuristic_skills_processing
 from const import KEY_SKILLS
 
 
@@ -103,6 +104,11 @@ class ParsingManager:
 
         for div in key_skills_divs:
             spans = div.find_all('span')
+            p_tags = div.find_all('p')
+            for p_tag in p_tags:
+                if p_tag.text.strip() != 'и другие':
+                    skills.add(p_tag.text.strip())
+
             for span in spans:
                 if span.text.strip() != 'и другие':
                     skill = span.text.strip()
@@ -181,8 +187,10 @@ class ParsingManager:
                     or 'vacancy-branded-user-content' in x
                     # or "g-user-content" in x
                     or 'bloko-tag-list' in x
+                    or 'vacancy-description' in x
                     or 'vacancy-title' in x))
             text = ' '.join(div.get_text(separator=" ", strip=True) for div in key_text_divs)
+            text = heuristic_skills_processing(text)
             text = remove_punct(text)
 
             for word in text.split():
