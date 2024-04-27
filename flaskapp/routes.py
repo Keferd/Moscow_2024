@@ -16,18 +16,15 @@ def post_link():
     try:
         url = request.json['link_vacancy']
 
-        print(url)
         if url:
             response_data = get_json_data(url)
-            print(response_data)
-            return jsonify(response_data)
+            return response_data
 
         else:
             return "Ой-йой, что-то пошло не так", 400
 
     except Exception as e:
-        print("=============")
-        print(e)
+        print("error:", e)
         return str(e), 500
 
 def json_response(data, code=200):
