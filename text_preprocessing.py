@@ -27,12 +27,9 @@ def remove_punct(text):
 
 
 def extract_number(text):
-    res = ""
     for elem in text.split():
         if elem.isdigit():
-            res += elem
-            if int(res) > 1000:
-                return res
+            return elem
 
 
 def clear_description(text):
