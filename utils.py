@@ -17,7 +17,6 @@ def get_json_data(url):
     for course in courses:
         course["formats"] = {int(n): format for n, format in enumerate(course["formats"])}
         course["skills"] = {int(n): skill for n, skill in enumerate(course["skills"])}
-        print(course["skills"])
         course["accuracy"] = compare_texts(vacancy_text, course["text"])
         course.pop('text', 'Key not found')
     courses = {"courses": {int(n): data for n, data in enumerate(courses)}}
