@@ -39,12 +39,34 @@ function changeSorting(sorting, courses) {
 
     switch (sorting) {
         case 'relevant':
-            coursesArray.sort((a, b) => parseInt(a.accuracy) - parseInt(b.accuracy));
+            // coursesArray.sort((a, b) => parseInt(a.accuracy) - parseInt(b.accuracy));
 
-            coursesArray.reverse();
+            // coursesArray.reverse();
+
+            // console.log(coursesArray);
+
+            // coursesArray.forEach(function(item, key, coursesArray) {
+            //     new_courses[key] = item
+            // });
+
+            dict_f = {}
 
             coursesArray.forEach(function(item, key, coursesArray) {
-                new_courses[key] = item
+                dict_f[key] = item.accuracy;
+            });
+
+            
+            // Преобразование объекта в массив пар ключ-значение и сортировка по значениям
+            var sortedKeys = Object.keys(dict_f).sort(function(a, b) {
+                return dict_f[a] - dict_f[b];
+            });
+
+            sortedKeys.reverse();
+
+            i = 0
+            coursesArray.forEach(function(item, key, coursesArray) {
+                new_courses[i] = coursesArray[sortedKeys[i]]
+                i = i + 1;
             });
 
             break;
@@ -170,7 +192,7 @@ sendfilebtn.addEventListener("click", function (e) {
                     <div class="main__search-overlay__title" id="main__search-overlay__title">
                         
                     </div>
-                    <div>
+                    <div class="main__search-overlay__select__container">
                         <select class="main__search-overlay__select" id="main__search-overlay__select">
                             <option value='relevant' selected>Сначала подходящие</option>
                             <option value='cheap'>Сначала дешевле</option>
