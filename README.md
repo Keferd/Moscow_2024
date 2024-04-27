@@ -27,19 +27,29 @@
 
 Чтобы запустить проект, выполните следующие шаги:
 
+### **Для локальной разработки**
 1. Убедитесь, что у вас установлен Python.
 2. Установите инструмент для создания изолированной среды Python 
-- **pip install virtualenv**
-- **pip install virtualenvwrapper-win**
+`pip install virtualenv`
+`pip install virtualenvwrapper-win`
 3. Создайте изолированную среду в Python 
-- **python3 -m venv venv**
+`python3 -m venv venv`
 4. Активируйте созданную виртуальную среду
-- **venv\Scripts\activate** или **venv\Scripts\activate.bat**
+`venv\Scripts\activate` или `venv\Scripts\activate.bat`
 5. Установите необходимые зависимости, выполнив следующую команду:
-- **pip install -r requirements.txt**
-6. Поднять приложение
-- **docker-compose -f moscow2024-docker-compose.yml up -d --build**
-7. Запустите приложение, выполнив следующую команду:
-- **python main.py**
+`pip install -r requirements.txt`
+6. Запустите приложение, выполнив следующую команду:
+`python main.py`
+7. После этого ваше приложение будет доступно по адресу 
+`http://127.0.0.1:8000/`
+
+### Для быстрого деплоя
+1. сборка образа приложения
+`docker build -t flask_app .` 
+2.  поднятие контейнера
+`docker run --name flask_app -d -p 8000:8000 flask_app`
+3. После поднятия контейнера, приложение будет доступно по адресу 
+`localhost:8000`
+
    
-После этого ваше приложение будет доступно по адресу http://127.0.0.1:8000/
+

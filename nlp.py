@@ -13,7 +13,7 @@ def compare_texts(text1, text2):
 def get_set_similarity(course_skills: set[str], vacancy_skills: set[str]):
     intersection = course_skills.intersection(vacancy_skills)
     union = course_skills.union(vacancy_skills)
-    return float(len(intersection)) / len(union)
+    return float(len(intersection)) / len(vacancy_skills)
 
 def complex_compare(vacancy_text: str, vacancy_skills: set[str], course_text: str, course_skills: set[str]) -> dict:
     tfidf_vectorizer = TfidfVectorizer()
