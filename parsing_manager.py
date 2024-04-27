@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from text_preprocessing import preprocess_text, remove_punct, extract_number
+from text_preprocessing import preprocess_text, remove_punct, extract_number, clear_description
 from const import KEY_SKILLS
 
 
@@ -40,18 +40,23 @@ class ParsingManager:
                     if link_url == "https://gb.ru/geek_university/engineer/blockchain":
                         continue
 
-                    course = {
-                        "link": link_url,
-                        "name": self._get_tittle(link_soup),
-                        "skills": self._get_skills(link_soup),
-                        "text": self._get_text(link_soup),
-                        "formats": self._get_formats(),
-                        "duration": self._get_duration(link_soup),
-                        "price": self._get_price(link_soup),
-                        "description": self._get_description(link_soup)
-                    }
+                    tittle = self._get_tittle(link_soup)
+                    for course in courses:
+                        if course["name"] == tittle:
+                            break
+                    else:
+                        course = {
+                            "link": link_url,
+                            "name": tittle,
+                            "skills": self._get_skills(link_soup),
+                            "text": self._get_text(link_soup),
+                            "formats": self._get_formats(),
+                            "duration": self._get_duration(link_soup),
+                            "price": self._get_price(link_soup),
+                            "description": self._get_description(link_soup)
+                        }
 
-                    courses.append(course)
+                        courses.append(course)
 
         return courses
 
@@ -103,7 +108,7 @@ class ParsingManager:
                     skill = span.text.strip()
                     if skill in KEY_SKILLS:
                         skills.add(span.text.strip())
-        return list(skills)
+        return skills
 
     @staticmethod
     def _get_description(link_soup):
@@ -117,7 +122,7 @@ class ParsingManager:
             description = div.get_text(separator=" ", strip=True)
             if description and "Длительность" not in description:
                 break
-        return description
+        return clear_description(description)
 
     @staticmethod
     def _get_tittle(link_soup):
@@ -184,7 +189,7 @@ class ParsingManager:
                 if word.lower() in [skill.lower() for skill in KEY_SKILLS]:
                     skills.add(word)
 
-        return text.lower(), list(skills)
+        return text.lower(), skills
 
 
 if __name__ == "__main__":

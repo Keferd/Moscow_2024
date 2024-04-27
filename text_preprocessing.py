@@ -27,7 +27,14 @@ def remove_punct(text):
 
 
 def extract_number(text):
-    numbers = re.findall(r'\d+', text)
-    number = int(''.join(numbers))
-    return number
+    for elem in text.split():
+        if elem.isdigit():
+            return elem
 
+
+def clear_description(text):
+    text = text.replace('• ', '', 1)
+    text = text.replace('— ', '', 1)
+    text = re.sub(r' •', '.', text)
+    text = re.sub(r' —', '.', text)
+    return text

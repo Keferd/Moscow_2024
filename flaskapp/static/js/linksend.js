@@ -273,7 +273,10 @@ sendfilebtn.addEventListener("click", function (e) {
                     document.getElementById("main__list-of-courses").innerHTML = newListOfCourseshtml
                 };
 
-                
+
+                // constructionListOfCourses(changeFilters(courses));
+                // document.getElementById("main__search-overlay__title").innerHTML = `Подходящие курсы ` + Object.keys(changeFilters(courses)).length + `:`;
+
 
                 function changeFormats(courses) {
 
