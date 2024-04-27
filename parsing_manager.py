@@ -1,14 +1,13 @@
 import requests
 import pickle
 from bs4 import BeautifulSoup
-from text_preprocessing import preprocess_text, remove_punct, extract_number, clear_description
+from text_preprocessing import preprocess_text, remove_punct, extract_number, clear_description, heuristic_skills_processing
 from const import KEY_SKILLS
 
 
 class ParsingManager:
     url = "https://gb.ru/courses/programming"
     _instance = None
-    _cache_file = "parsing_cache.pkl"
 
     def __new__(cls):
         if cls._instance is None:
