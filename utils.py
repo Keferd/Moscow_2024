@@ -19,9 +19,12 @@ def get_json_data(url):
         course["formats"] = {int(n): format for n, format in enumerate(course["formats"])}
         raw_course_skills = course["skills"]
         course["skills"] = {int(n): skill for n, skill in enumerate(list(course["skills"] & vacancy_skills))}
-        course["accuracy"] = compare_texts(vacancy_text, course["text"])
+
+        result = complex_compare(vacancy_text, vacancy_skills, course['text'], raw_course_skills)#compare_texts(vacancy_text, course["text"])
+        course['accuracy'] = result['final_score']
+        course['skills_accuracy'] = result['skills_score']
+
         max_accuracy = course["accuracy"] if max_accuracy < course["accuracy"] else max_accuracy
-        course["accuracy"] = complex_compare(vacancy_text, vacancy_skills, course['text'], raw_course_skills)#compare_texts(vacancy_text, course["text"])
         course.pop('text', 'Key not found')
     for course in courses:
         course["accuracy"] = round(((course["accuracy"]/max_accuracy)*100), 2)
