@@ -50,7 +50,7 @@ class ParsingManager:
                         "text": self._get_text(link_soup),
                         "formats": self._get_formats(link_soup),
                         "price": self._get_price(link_soup),
-                        # "description": self._get_description(link_soup)
+                        "description": self._get_description(link_soup)
                     }
 
                     courses.append(course)
