@@ -3,6 +3,10 @@ function getColorFromGradient(value) {
     // Преобразуем значение от 0 до 100 в диапазон от 0 до 1
     var normalizedValue = value / 100;
 
+    if (normalizedValue == 1){
+        normalizedValue -= 0.01;
+    }
+
     // Создаем градиент
     var ctx = document.createElement("canvas").getContext("2d");
     var gradient = ctx.createLinearGradient(0, 0, 100, 0);
@@ -244,7 +248,7 @@ sendfilebtn.addEventListener("click", function (e) {
                                 <div class="main__list-of-courses__partition"></div>
                                 <div class="main__list-of-courses__right">
                                     <div class="main__list-of-courses__right__title">
-                                        Подходит на: <span style="color: ` + getColorFromGradient(courses[i].accuracy) + `">` + courses[i].accuracy + `</span>
+                                        Подходит на: <span style="color: ` + getColorFromGradient(courses[i].accuracy) + `">` + courses[i].accuracy + `%</span>
                                     </div>
                                     <div class="main__list-of-courses__right__partition"></div>
                                     <div class="main__list-of-courses__right__subtitle">Совпадение по навыкам:</div>
@@ -341,14 +345,14 @@ sendfilebtn.addEventListener("click", function (e) {
                     if (filtered_courses != courses){
                         constructionListOfCourses(filtered_courses);
 
-                        document.getElementById("main__search-overlay__title").innerHTML = `Подходящие вакансии ` + Object.keys(filtered_courses).length + `:`;
+                        document.getElementById("main__search-overlay__title").innerHTML = `Подходящие курсы ` + Object.keys(filtered_courses).length + `:`;
                     }
                 }
 
 
                 filtered_courses = changeSorting(document.getElementById("main__search-overlay__select").value, changeFormats(changePrice(courses)));
                 constructionListOfCourses(filtered_courses);
-                document.getElementById("main__search-overlay__title").innerHTML = `Подходящие вакансии ` + Object.keys(changeFormats(filtered_courses)).length + `:`;
+                document.getElementById("main__search-overlay__title").innerHTML = `Подходящие курсы ` + Object.keys(changeFormats(filtered_courses)).length + `:`;
 
                 document.getElementById("main__search-overlay__select").addEventListener("change", function() {
                     // courses = changeSorting(document.getElementById("main__search-overlay__select").value, courses)
