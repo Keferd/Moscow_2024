@@ -22,17 +22,15 @@ def preprocess_text(text):
 
 
 def remove_punct(text):
-    text = re.sub(r'(?!\bC\+\+\b)([^\w\s+])', '', text)
+    # text = re.sub(r'[^\w\s-]', '', text)
+    text = re.sub(r'(?!\bC\+\+\b)([^\w\s+-])', '', text)
     return text
 
 
 def extract_number(text):
-    res = ""
     for elem in text.split():
         if elem.isdigit():
-            res += elem
-            if int(res) > 1000:
-                return res
+            return elem
 
 def heuristic_skills_processing(text):
     text = text.replace("C/C++", "C C++")
