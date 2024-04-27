@@ -8,9 +8,10 @@ nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 
+
 def preprocess_text(text):
     text = text.lower()
-    text = re.sub(r'[^\w\s]', '', text)
+    text = remove_punct(text)
     tokens = word_tokenize(text)
     stop_words = set(stopwords.words('russian'))
     tokens = [word for word in tokens if word not in stop_words]
@@ -18,3 +19,8 @@ def preprocess_text(text):
     tokens = [lemmatizer.lemmatize(word) for word in tokens]
     preprocessed_text = ' '.join(tokens)
     return preprocessed_text
+
+
+def remove_punct(text):
+    text = re.sub(r'[^\w\s]', '', text)
+    return text
