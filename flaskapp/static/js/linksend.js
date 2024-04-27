@@ -181,8 +181,14 @@ sendfilebtn.addEventListener("click", function (e) {
                     <div class="main__required-skills__list">
                 `;
 
-                for (i in data.skills){
-                    newhtml +=  `<div>` + data.skills[i] + `</div>`
+                
+                if (Object.keys(data.skills).length > 0) {
+                    for (i in data.skills){
+                        newhtml +=  `<div>` + data.skills[i] + `</div>`
+                    }
+                }
+                else {
+                    newhtml += `<div id="main__list-of-courses__right__list__empty">Отсутствуют</div>`;
                 }
 
                 newhtml +=  `
@@ -245,11 +251,17 @@ sendfilebtn.addEventListener("click", function (e) {
                                     <div>
                                         <div class="main__list-of-courses__right__list">
                         `;
-    
-                        for (j in courses[i].skills){
-                            newListOfCourseshtml +=  `<div>` + courses[i].skills[j] + `</div>`
-                        };
-    
+                        
+
+                        if (Object.keys(courses[i].skills).length > 0) {
+                            for (j in courses[i].skills){
+                                newListOfCourseshtml +=  `<div>` + courses[i].skills[j] + `</div>`
+                            };
+                        }
+                        else {
+                            newListOfCourseshtml += `<div id="main__list-of-courses__right__list__empty">Отсутствует</div>`;
+                        }
+                        
                         newListOfCourseshtml += `
                                         </div>  
                                     </div>
