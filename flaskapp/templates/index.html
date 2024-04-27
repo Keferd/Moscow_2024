@@ -5,44 +5,152 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moscow2024</title>
     <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
 <body>
     <header>
-        <h1>Moscow2024</h1>
+        <a class="header__title" href="">Moscow 2024</a>
     </header>
     <main>
-        <div class="quote-container">
-            <blockquote class="quote-text">
-                "Наука — это организованные знания, мудрость — это организованная жизнь."
-            </blockquote>
-            <p class="quote-author">— Иммануил Кант</p>
+        <div class="main__column">
+            <div class="main__entry__container main__container">
+                <div class="main__entry__title main__title">
+                    Для начала работы:
+                </div>
+                <div class="main__entry__label">
+                    Введите ссылку на вакансию:
+                </div>
+                <div class="main__entry__field">
+                    <input class="main__entry__text" type="text" id="link_vacancy" placeholder="Ссылка на вакансию...">
+                    <button class="main__entry__button" id="send_link_btn">
+                        Запустить
+                    </button>
+                </div>
+            </div>
+            <div class="main__filters__container main__container">
+                <div class="main__title">
+                    Фильтры:
+                </div>
+                <div class="main__filters__column">
+                    <div>
+                        <div class="main__filters__subtitle">Цена</div>
+                        
+                        <div class="main__filters__price__form">
+                            <div class="main__filters__price__numbers">
+                                <input type="number" id="minAmount">
+                                <div class="main__filters__price__partition"></div>
+                                <input type="number" id="maxAmount">
+                            </div>
+                            <div id="slider-range"></div>
+                        </div>
+                    </div>
+                    <div class="main__filters__partition"></div>
+                    <div>
+                        <div class="main__filters__subtitle">Форматы обучения</div>
+                        <form class="main__filters__form" id="main__filters__form" action="" method="post">
+                            <div>
+                                <input type="checkbox" id="item1" name="item1" value="item1">
+                                <label for="item1">Занятие в группе c преподавателем</label><br>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="item2" name="item2" value="item2">
+                                <label for="item2">Онлайн-встречи c экспертами</label><br>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="item3" name="item3" value="item3">
+                                <label for="item3">Онлайн-лекции и вебинары</label><br>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="item4" name="item4" value="item4">
+                                <label for="item4">Видеозаписи занятий</label><br>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="item5" name="item5" value="item5">
+                                <label for="item5">Практические занятия</label><br>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="item6" name="item6" value="item6">
+                                <label for="item6">Домашняя работа</label><br>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="main__partition"></div>
+            <div class="main__result-container" id="main__result-container">
+                <div class="main__result-container__dummy__container">
+                    <img src="static/img/doc.png" alt="doc.png">
+                    <div>
+                        Отправьте ссылку на вакансию <br> для получения рекомендованных курсов
+                    </div>
+                </div>
+            </div>
         </div>
-        <style>
-            .quote-container {
-                background-color: #fff;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-                text-align: center;
-                max-width: 500px;
-                width: 80%;
-            }
-
-            .quote-text {
-                font-size: 24px;
-                font-style: italic;
-                color: #333;
-                margin-bottom: 20px;
-            }
-
-            .quote-author {
-                font-size: 18px;
-                color: #666;
-            }
-        </style>
     </main>
     <footer>
         Это база
     </footer>
+
+    
+    <script>
+        $( function() {
+        $( "#slider-range" ).slider({
+            range: true,
+            min: 0,
+            max: 10000,
+            values: [ 0, 10000 ],
+            slide: function( event, ui ) {
+                $( "#minAmount" ).val(ui.values[ 0 ]);
+                $( "#maxAmount" ).val(ui.values[ 1 ]);
+            }
+        });
+        $( "#minAmount" ).val($( "#slider-range" ).slider( "values", 0 ));
+        $( "#maxAmount" ).val($( "#slider-range" ).slider( "values", 1 ));
+
+        $("#minAmount, #maxAmount").change(function() {
+            
+            var minVal = parseInt($("#minAmount").val());
+            var maxVal = parseInt($("#maxAmount").val());
+            if (!isNaN(minVal) && !isNaN(maxVal)) {
+                $("#slider-range").slider("values", [minVal, maxVal]);
+            }
+        });
+    });
+    </script>
+    <style>
+        #slider-range.ui-slider-horizontal {
+            height: 0; 
+            border-top: 1px solid #1E7F94;
+        }
+
+        #slider-range .ui-slider-handle  {
+            border-radius: 50%;
+            height: 25px;
+            width: 25px;
+            border-color: #1E7F94;
+        }
+
+        #slider-range .ui-slider-handle:active  {
+            background-color: #1E7F94;
+        }
+        
+        #slider-range .ui-slider-handle:focus  {
+            outline: none;
+            background-color: #1E7F94;
+        }
+
+        .ui-slider-handle {
+            margin-top: -9px; /* Половина высоты ползунка */
+        }
+
+        .ui-slider {
+            margin-top: 20px; /* Желаемое расстояние между верхним краем слайдбара и верхним краем его контейнера */
+        }
+    </style>
+
+    
+    <script src="static/js/linksend.js"></script>
 </body>
 </html>
