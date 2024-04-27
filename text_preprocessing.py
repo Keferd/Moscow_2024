@@ -26,7 +26,7 @@ def remove_punct(text):
     return text
 
 
-def extract_price(text):
+def extract_number(text):
     numbers = re.findall(r'\d+', text)
     number = int(''.join(numbers))
     return number

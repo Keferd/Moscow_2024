@@ -8,3 +8,4 @@ def compare_texts(text1, text2):
     similarity = cosine_similarity(tfidf_matrix[0], tfidf_matrix[1])
 
     return similarity[0][0]
+

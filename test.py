@@ -5,17 +5,22 @@ from nlp import compare_texts
 PARSING_MANAGER = ParsingManager()
 
 
-# vacancy_text, vacancy_skills = PARSING_MANAGER.get_vacancy_data_from_hh("https://ufa.hh.ru/vacancy/96482951")
-# vacancy_text = preprocess_text(vacancy_text)
-# print(vacancy_text)
-# print(vacancy_skills)
+def get_json_data(url):
+    vacancy_text, vacancy_skills = PARSING_MANAGER.get_vacancy_data_from_hh(url)
+    vacancy_skills = {"skills": [{n: skill} for n, skill in enumerate(vacancy_skills)]}
+    vacancy_text = preprocess_text(vacancy_text)
 
-course_texts = PARSING_MANAGER.courses
-#
-# res = {}
-# for key, value in course_texts.items():
-#     res[key] = compare_texts(vacancy_text, value)
-#
-# sorted_res = dict(sorted(res.items(), key=lambda item: item[1], reverse=True))
-# for key, value in sorted_res.items():
-#     print(value, key)
+    courses = PARSING_MANAGER.courses
+
+    for course in courses:
+        course["formats"] = [{n: format} for n, format in enumerate(course["formats"])]
+        course["skills"] = [{n: skill} for n, skill in enumerate(course["skills"])]
+        course["accuracy"] = compare_texts(vacancy_text, course["text"])
+
+    courses = {"courses": [{n: data} for n, data in enumerate(courses)]}
+    json_data = [vacancy_skills, courses]
+    print(json_data)
+    return json_data
+
+
+get_json_data("https://ufa.hh.ru/vacancy/96127386")

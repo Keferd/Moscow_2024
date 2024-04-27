@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from text_preprocessing import preprocess_text, remove_punct, extract_price
+from text_preprocessing import preprocess_text, remove_punct, extract_number
 from const import KEY_SKILLS
 
 
@@ -40,7 +40,6 @@ class ParsingManager:
                     if link_url == "https://gb.ru/geek_university/engineer/blockchain":
                         continue
 
-                    print(link_url)
                     course = {
                         "link": link_url,
                         "tittle": self._get_tittle(link_soup),
@@ -101,7 +100,9 @@ class ParsingManager:
             spans = div.find_all('span')
             for span in spans:
                 if span.text.strip() != 'и другие':
-                    skills.add(span.text.strip())
+                    skill = span.text.strip()
+                    if skill in KEY_SKILLS:
+                        skills.add(span.text.strip())
         return list(skills)
 
     @staticmethod
@@ -126,7 +127,6 @@ class ParsingManager:
                 or "promo__title" in x))
 
         tittle = [div.get_text(separator=" ", strip=True) for div in key_tittle]
-        print(tittle[0])
         return tittle[0]
 
     @staticmethod
@@ -137,8 +137,7 @@ class ParsingManager:
                 or "price__value" in x))
 
         price = [div.get_text(separator=" ", strip=True) for div in key_price]
-        new_price = extract_price(price[0])
-        print(new_price)
+        new_price = extract_number(price[0])
         return new_price
 
     @staticmethod
@@ -150,7 +149,7 @@ class ParsingManager:
         duration = [div.get_text(separator=" ", strip=True) for div in key_duration]
         if not duration:
             return None
-        return duration[0]
+        return extract_number(duration[0])
 
     @staticmethod
     def _get_formats():
@@ -185,7 +184,7 @@ class ParsingManager:
                 if word.lower() in [skill.lower() for skill in KEY_SKILLS]:
                     skills.add(word)
 
-        return text.lower(), skills
+        return text.lower(), list(skills)
 
 
 if __name__ == "__main__":
