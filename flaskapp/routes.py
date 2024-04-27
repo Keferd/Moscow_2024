@@ -81,7 +81,7 @@ def post_link():
                     "name": "Разработчик искусственного интеллекта",
                     "link":"https://gb.ru/geek_university/developer/programmer/ai-spec",
                     "description": "Научитесь c нуля создавать и управлять системами c использованием искусственного интеллекта",
-                    "duration": "12",
+                    "duration": None,
                     "price": "5999",
                     "accuracy": "53",
                     "formats": {

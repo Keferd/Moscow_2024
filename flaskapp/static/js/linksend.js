@@ -195,6 +195,11 @@ sendfilebtn.addEventListener("click", function (e) {
                     let newListOfCourseshtml = ``
 
                     for (i in courses){
+                        let duration = ``
+                        if (courses[i].duration){
+                            duration = `<div>Срок обучения: ` + courses[i].duration + ` месяцев</div>`;
+                        }
+
                         newListOfCourseshtml +=  `
                             <div class="main__container main__list-of-courses__container">
                                 <div class="main__list-of-courses__left">
@@ -204,7 +209,7 @@ sendfilebtn.addEventListener("click", function (e) {
                                         ` + courses[i].description + `
                                         </div>
                                         <div class="main__list-of-courses__left__partition"></div>
-                                        <div>Срок обучения: ` + courses[i].duration + ` месяцев</div>
+                                        `+ duration + `
                                     </div>
                                     <div class="main__list-of-courses__left__price">от ` + courses[i].price + `₽ в месяц</div>
                                 </div>
