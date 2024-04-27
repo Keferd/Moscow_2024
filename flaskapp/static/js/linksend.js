@@ -39,12 +39,34 @@ function changeSorting(sorting, courses) {
 
     switch (sorting) {
         case 'relevant':
-            coursesArray.sort((a, b) => parseInt(a.accuracy) - parseInt(b.accuracy));
+            // coursesArray.sort((a, b) => parseInt(a.accuracy) - parseInt(b.accuracy));
 
-            coursesArray.reverse();
+            // coursesArray.reverse();
+
+            // console.log(coursesArray);
+
+            // coursesArray.forEach(function(item, key, coursesArray) {
+            //     new_courses[key] = item
+            // });
+
+            dict_f = {}
 
             coursesArray.forEach(function(item, key, coursesArray) {
-                new_courses[key] = item
+                dict_f[key] = item.accuracy;
+            });
+
+            
+            // Преобразование объекта в массив пар ключ-значение и сортировка по значениям
+            var sortedKeys = Object.keys(dict_f).sort(function(a, b) {
+                return dict_f[a] - dict_f[b];
+            });
+
+            sortedKeys.reverse();
+
+            i = 0
+            coursesArray.forEach(function(item, key, coursesArray) {
+                new_courses[i] = coursesArray[sortedKeys[i]]
+                i = i + 1;
             });
 
             break;
@@ -159,8 +181,14 @@ sendfilebtn.addEventListener("click", function (e) {
                     <div class="main__required-skills__list">
                 `;
 
-                for (i in data.skills){
-                    newhtml +=  `<div>` + data.skills[i] + `</div>`
+                
+                if (Object.keys(data.skills).length > 0) {
+                    for (i in data.skills){
+                        newhtml +=  `<div>` + data.skills[i] + `</div>`
+                    }
+                }
+                else {
+                    newhtml += `<div id="main__list-of-courses__right__list__empty">Отсутствуют</div>`;
                 }
 
                 newhtml +=  `
@@ -170,7 +198,7 @@ sendfilebtn.addEventListener("click", function (e) {
                     <div class="main__search-overlay__title" id="main__search-overlay__title">
                         
                     </div>
-                    <div>
+                    <div class="main__search-overlay__select__container">
                         <select class="main__search-overlay__select" id="main__search-overlay__select">
                             <option value='relevant' selected>Сначала подходящие</option>
                             <option value='cheap'>Сначала дешевле</option>
@@ -195,6 +223,11 @@ sendfilebtn.addEventListener("click", function (e) {
                     let newListOfCourseshtml = ``
 
                     for (i in courses){
+                        let duration = ``
+                        if (courses[i].duration){
+                            duration = `<div>Срок обучения: ` + courses[i].duration + ` месяцев</div>`;
+                        }
+
                         newListOfCourseshtml +=  `
                             <div class="main__container main__list-of-courses__container">
                                 <div class="main__list-of-courses__left">
@@ -204,7 +237,7 @@ sendfilebtn.addEventListener("click", function (e) {
                                         ` + courses[i].description + `
                                         </div>
                                         <div class="main__list-of-courses__left__partition"></div>
-                                        <div>Срок обучения: ` + courses[i].duration + ` месяцев</div>
+                                        `+ duration + `
                                     </div>
                                     <div class="main__list-of-courses__left__price">от ` + courses[i].price + `₽ в месяц</div>
                                 </div>
@@ -218,11 +251,17 @@ sendfilebtn.addEventListener("click", function (e) {
                                     <div>
                                         <div class="main__list-of-courses__right__list">
                         `;
-    
-                        for (j in courses[i].skills){
-                            newListOfCourseshtml +=  `<div>` + courses[i].skills[j] + `</div>`
-                        };
-    
+                        
+
+                        if (Object.keys(courses[i].skills).length > 0) {
+                            for (j in courses[i].skills){
+                                newListOfCourseshtml +=  `<div>` + courses[i].skills[j] + `</div>`
+                            };
+                        }
+                        else {
+                            newListOfCourseshtml += `<div id="main__list-of-courses__right__list__empty">Отсутствует</div>`;
+                        }
+                        
                         newListOfCourseshtml += `
                                         </div>  
                                     </div>
@@ -234,15 +273,12 @@ sendfilebtn.addEventListener("click", function (e) {
                     document.getElementById("main__list-of-courses").innerHTML = newListOfCourseshtml
                 };
 
-                constructionListOfCourses(changeFilters(courses));
-                document.getElementById("main__search-overlay__title").innerHTML = `Подходящие курсы ` + Object.keys(changeFilters(courses)).length + `:`;
 
-                document.getElementById("main__search-overlay__select").addEventListener("change", function() {
-                    courses = changeSorting(document.getElementById("main__search-overlay__select").value, courses)
-                    constructionListOfCourses(courses);
-                });
+                // constructionListOfCourses(changeFilters(courses));
+                // document.getElementById("main__search-overlay__title").innerHTML = `Подходящие курсы ` + Object.keys(changeFilters(courses)).length + `:`;
 
-                function changeFilters(courses) {
+
+                function changeFormats(courses) {
 
                     let checkboxes = document.getElementById("main__filters__form");
                     var checkedLabels = [];
@@ -276,9 +312,30 @@ sendfilebtn.addEventListener("click", function (e) {
                     return new_courses_filtered;
                 }
 
-                document.getElementById("main__filters__form").addEventListener("change", function() {
+                function changePrice(courses) {
+
+                    let minVal = parseInt($("#minAmount").val());
+                    let maxVal = parseInt($("#maxAmount").val());
+
+
+                    let new_courses_filtered = {}
+
+                    for (var courseId in courses) {
+                        if (minVal <= Number(courses[courseId].price) && Number(courses[courseId].price) <= maxVal) {
+                            console.log(minVal, courses[courseId].price, maxVal)
+                            new_courses_filtered[courseId] = courses[courseId];
+                        }
+                    }
+
+                    // Вывод результата
+                    console.log(new_courses_filtered);
+
+                    return new_courses_filtered;
+                }
+
+                function callchange() {
                     // Отфильтировать список курсов на текущее состояние 
-                    filtered_courses = changeFilters(courses);
+                    filtered_courses = changeSorting(document.getElementById("main__search-overlay__select").value, changeFormats(changePrice(courses)));
                     
                     // Если состав курсов изменился - загрузить новую страницу
                     if (filtered_courses != courses){
@@ -286,6 +343,46 @@ sendfilebtn.addEventListener("click", function (e) {
 
                         document.getElementById("main__search-overlay__title").innerHTML = `Подходящие вакансии ` + Object.keys(filtered_courses).length + `:`;
                     }
+                }
+
+
+                filtered_courses = changeSorting(document.getElementById("main__search-overlay__select").value, changeFormats(changePrice(courses)));
+                constructionListOfCourses(filtered_courses);
+                document.getElementById("main__search-overlay__title").innerHTML = `Подходящие вакансии ` + Object.keys(changeFormats(filtered_courses)).length + `:`;
+
+                document.getElementById("main__search-overlay__select").addEventListener("change", function() {
+                    // courses = changeSorting(document.getElementById("main__search-overlay__select").value, courses)
+                    // constructionListOfCourses(courses);
+                    callchange()
+                });
+
+
+                document.getElementById("main__filters__form").addEventListener("change", function() {
+                    callchange()
+                });
+
+                mouseDownInside = false;
+                document.getElementById("slider-range").addEventListener('mousedown', function() {
+                    mouseDownInside = true;
+                });
+
+                document.addEventListener('mouseup', function() {
+                    if (mouseDownInside) {
+                        callchange()
+                    }
+                    mouseDownInside = false;
+                });
+
+                // document.getElementById("slider-range").addEventListener('mouseleave', function() {
+                //     callchange()
+                // });
+
+                // document.getElementById("slider-range").addEventListener('mouseup', function() {
+                //     callchange()
+                // });
+
+                $("#minAmount, #maxAmount").change(function() {
+                    callchange()
                 });
 
             });

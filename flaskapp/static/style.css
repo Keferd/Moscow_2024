@@ -340,7 +340,6 @@ main {
 
 
 
-
 .main__list-of-courses__container {
     display: flex;
     padding-bottom: 30px;
@@ -442,6 +441,14 @@ main {
     display: flex;
     align-items: center;
 }
+
+#main__list-of-courses__right__list__empty {
+    border: none;
+    color: #7E7E7E;
+    padding: 0;
+}
+
+
 
 
 
