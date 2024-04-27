@@ -16,10 +16,11 @@ def index():
 @app.route('/api/link', methods=['POST'])
 def post_link():
     try:
-        link = request.json['link_vacancy']
+        url = request.json['link_vacancy']
 
-        if link:
-            return jsonify(response_data)
+        if url:
+            response_data = get_json_data(url)
+            return response_data
         
         else:
             return "Ой-йой, что-то пошло не так", 400
