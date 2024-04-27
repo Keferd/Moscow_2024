@@ -22,7 +22,7 @@ def preprocess_text(text):
 
 
 def remove_punct(text):
-    text = re.sub(r'[^\w\s]', '', text)
+    text = re.sub(r'(?!\bC\+\+\b)([^\w\s+])', '', text)
     return text
 
 
@@ -30,4 +30,8 @@ def extract_price(text):
     numbers = re.findall(r'\d+', text)
     number = int(''.join(numbers))
     return number
+
+def heuristic_skills_processing(text):
+    text = text.replace("C/C++", "C C++")
+    return text
 

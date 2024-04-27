@@ -1,12 +1,14 @@
 import requests
+import pickle
 from bs4 import BeautifulSoup
-from text_preprocessing import preprocess_text, remove_punct, extract_price
+from text_preprocessing import preprocess_text, remove_punct, extract_price, heuristic_skills_processing
 from const import KEY_SKILLS
 
 
 class ParsingManager:
     url = "https://gb.ru/courses/programming"
     _instance = None
+    _cache_file = "parsing_cache.pkl"
 
     def __new__(cls):
         if cls._instance is None:
@@ -22,7 +24,22 @@ class ParsingManager:
             self._courses = self._get_parsing_courses_data(self.url)
         return self._courses
 
+    def _load_cache(self):
+        try:
+            with open(self._cache_file, "rb") as f:
+                return pickle.load(f)
+        except FileNotFoundError:
+            return None
+
+    def _save_cache(self, data):
+        with open(self._cache_file, "wb") as f:
+            pickle.dump(data, f)
+
     def _get_parsing_courses_data(self, url):
+        courses = self._load_cache()
+        if courses:
+            return courses
+
         response = requests.get(url)
         courses = []
 
@@ -40,7 +57,6 @@ class ParsingManager:
                     if link_url == "https://gb.ru/geek_university/engineer/blockchain":
                         continue
 
-                    print(link_url)
                     course = {
                         "link": link_url,
                         "tittle": self._get_tittle(link_soup),
@@ -53,7 +69,7 @@ class ParsingManager:
                     }
 
                     courses.append(course)
-
+        self._save_cache(courses)
         return courses
 
     @staticmethod
@@ -99,10 +115,16 @@ class ParsingManager:
 
         for div in key_skills_divs:
             spans = div.find_all('span')
+            p_tags = div.find_all('p')
+            for p_tag in p_tags:
+                if p_tag.text.strip() != 'и другие':
+                    skills.add(p_tag.text.strip())
+
             for span in spans:
                 if span.text.strip() != 'и другие':
                     skills.add(span.text.strip())
-        return list(skills)
+
+        return skills
 
     @staticmethod
     def _get_description(link_soup):
@@ -177,8 +199,10 @@ class ParsingManager:
                     or 'vacancy-branded-user-content' in x
                     # or "g-user-content" in x
                     or 'bloko-tag-list' in x
+                    or 'vacancy-description' in x
                     or 'vacancy-title' in x))
             text = ' '.join(div.get_text(separator=" ", strip=True) for div in key_text_divs)
+            text = heuristic_skills_processing(text)
             text = remove_punct(text)
 
             for word in text.split():

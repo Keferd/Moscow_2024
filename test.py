@@ -11,6 +11,7 @@ PARSING_MANAGER = ParsingManager()
 # print(vacancy_skills)
 
 course_texts = PARSING_MANAGER.courses
+print(course_texts)
 #
 # res = {}
 # for key, value in course_texts.items():
