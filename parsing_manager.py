@@ -113,8 +113,8 @@ class ParsingManager:
                 or "promo__description" in x))
 
         description = [div.get_text(separator=" ", strip=True) for div in key_description]
-        print(description)
-        return description
+        print(description[0])
+        return description[0]
 
     @staticmethod
     def _get_tittle(link_soup):
