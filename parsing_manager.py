@@ -1,6 +1,4 @@
 import requests
-import json
-from collections import defaultdict
 from bs4 import BeautifulSoup
 from text_preprocessing import preprocess_text, remove_punct
 from const import KEY_SKILLS
@@ -48,7 +46,8 @@ class ParsingManager:
                         "tittle": self._get_tittle(link_soup),
                         "skills": self._get_skills(link_soup),
                         "text": self._get_text(link_soup),
-                        "formats": self._get_formats(link_soup),
+                        "formats": self._get_formats(),
+                        "duration": self._get_duration(link_soup),
                         "price": self._get_price(link_soup),
                         "description": self._get_description(link_soup)
                     }
@@ -107,14 +106,17 @@ class ParsingManager:
 
     @staticmethod
     def _get_description(link_soup):
+        description = ""
         key_description = link_soup.find_all(class_=lambda x: x and (
                 'gkb-promo__text' in x
                 or 'cover__description' in x
                 or "promo__description" in x))
 
-        description = [div.get_text(separator=" ", strip=True) for div in key_description]
-        print(description[0])
-        return description[0]
+        for div in sorted(key_description, key=len):
+            description = div.get_text(separator=" ", strip=True)
+            if description and "Длительность" not in description:
+                break
+        return description
 
     @staticmethod
     def _get_tittle(link_soup):
@@ -141,26 +143,18 @@ class ParsingManager:
     @staticmethod
     def _get_duration(link_soup):
         key_duration = link_soup.find_all(class_=lambda x: x and (
-                'promo-price-card__hint' in x
-                or 'gkb-promo__price-plan' in x
-                or "price__desc" in x))
+                'promo__info' in x
+                or 'gkb-promo__text-secondary' in x))
 
         duration = [div.get_text(separator=" ", strip=True) for div in key_duration]
-        print(duration[0])
+        if not duration:
+            return None
         return duration[0]
 
     @staticmethod
-    def _get_formats(link_soup):
-        # TODO: добавить еще контейнеры
-        key_format = link_soup.find_all(class_=lambda x: x and (
-                'gkb-promo__list-item' in x
-                or 'final-info-cover__listing-wrapper' in x
-                or 'promo-main-list__list' in x))
-
-        formats = [div.get_text(separator=" ", strip=True) for div in key_format]
-        if "Разные форматы обучения" in formats:
-            formats.remove("Разные форматы обучения")
-        print(formats)
+    def _get_formats():
+        formats = ["Занятие в группе с преподавателем", "Онлайн-встречи с экспертами", "Онлайн-лекции и вебинары",
+                   "Видеоуроки с обратной связью от экспертов", "Практические занятия", "Домашние работы"]
         return formats
 
     @staticmethod
