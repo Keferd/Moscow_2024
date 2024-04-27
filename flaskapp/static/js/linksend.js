@@ -234,15 +234,9 @@ sendfilebtn.addEventListener("click", function (e) {
                     document.getElementById("main__list-of-courses").innerHTML = newListOfCourseshtml
                 };
 
-                constructionListOfCourses(changeFilters(courses));
-                document.getElementById("main__search-overlay__title").innerHTML = `Подходящие вакансии ` + Object.keys(changeFilters(courses)).length + `:`;
+                
 
-                document.getElementById("main__search-overlay__select").addEventListener("change", function() {
-                    courses = changeSorting(document.getElementById("main__search-overlay__select").value, courses)
-                    constructionListOfCourses(courses);
-                });
-
-                function changeFilters(courses) {
+                function changeFormats(courses) {
 
                     let checkboxes = document.getElementById("main__filters__form");
                     var checkedLabels = [];
@@ -276,9 +270,30 @@ sendfilebtn.addEventListener("click", function (e) {
                     return new_courses_filtered;
                 }
 
-                document.getElementById("main__filters__form").addEventListener("change", function() {
+                function changePrice(courses) {
+
+                    let minVal = parseInt($("#minAmount").val());
+                    let maxVal = parseInt($("#maxAmount").val());
+
+
+                    let new_courses_filtered = {}
+
+                    for (var courseId in courses) {
+                        if (minVal <= Number(courses[courseId].price) && Number(courses[courseId].price) <= maxVal) {
+                            console.log(minVal, courses[courseId].price, maxVal)
+                            new_courses_filtered[courseId] = courses[courseId];
+                        }
+                    }
+
+                    // Вывод результата
+                    console.log(new_courses_filtered);
+
+                    return new_courses_filtered;
+                }
+
+                function callchange() {
                     // Отфильтировать список курсов на текущее состояние 
-                    filtered_courses = changeFilters(courses);
+                    filtered_courses = changeSorting(document.getElementById("main__search-overlay__select").value, changeFormats(changePrice(courses)));
                     
                     // Если состав курсов изменился - загрузить новую страницу
                     if (filtered_courses != courses){
@@ -286,6 +301,46 @@ sendfilebtn.addEventListener("click", function (e) {
 
                         document.getElementById("main__search-overlay__title").innerHTML = `Подходящие вакансии ` + Object.keys(filtered_courses).length + `:`;
                     }
+                }
+
+
+                filtered_courses = changeSorting(document.getElementById("main__search-overlay__select").value, changeFormats(changePrice(courses)));
+                constructionListOfCourses(filtered_courses);
+                document.getElementById("main__search-overlay__title").innerHTML = `Подходящие вакансии ` + Object.keys(changeFormats(filtered_courses)).length + `:`;
+
+                document.getElementById("main__search-overlay__select").addEventListener("change", function() {
+                    // courses = changeSorting(document.getElementById("main__search-overlay__select").value, courses)
+                    // constructionListOfCourses(courses);
+                    callchange()
+                });
+
+
+                document.getElementById("main__filters__form").addEventListener("change", function() {
+                    callchange()
+                });
+
+                mouseDownInside = false;
+                document.getElementById("slider-range").addEventListener('mousedown', function() {
+                    mouseDownInside = true;
+                });
+
+                document.addEventListener('mouseup', function() {
+                    if (mouseDownInside) {
+                        callchange()
+                    }
+                    mouseDownInside = false;
+                });
+
+                // document.getElementById("slider-range").addEventListener('mouseleave', function() {
+                //     callchange()
+                // });
+
+                // document.getElementById("slider-range").addEventListener('mouseup', function() {
+                //     callchange()
+                // });
+
+                $("#minAmount, #maxAmount").change(function() {
+                    callchange()
                 });
 
             });

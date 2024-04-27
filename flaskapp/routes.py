@@ -18,11 +18,8 @@ def post_link():
     try:
         text = request.json['link_vacancy']
 
-        print(text)
-
         if text:
             
-            print(text)
 
             response_data = {
                 "skills": {
