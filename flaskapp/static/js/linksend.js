@@ -235,7 +235,7 @@ sendfilebtn.addEventListener("click", function (e) {
                 };
 
                 constructionListOfCourses(changeFilters(courses));
-                document.getElementById("main__search-overlay__title").innerHTML = `Подходящие вакансии ` + Object.keys(changeFilters(courses)).length + `:`;
+                document.getElementById("main__search-overlay__title").innerHTML = `Подходящие курсы ` + Object.keys(changeFilters(courses)).length + `:`;
 
                 document.getElementById("main__search-overlay__select").addEventListener("change", function() {
                     courses = changeSorting(document.getElementById("main__search-overlay__select").value, courses)
