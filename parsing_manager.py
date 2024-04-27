@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from text_preprocessing import preprocess_text, remove_punct
+from text_preprocessing import preprocess_text, remove_punct, extract_price
 from const import KEY_SKILLS
 
 
@@ -137,8 +137,9 @@ class ParsingManager:
                 or "price__value" in x))
 
         price = [div.get_text(separator=" ", strip=True) for div in key_price]
-        print(price[0])
-        return price[0]
+        new_price = extract_price(price[0])
+        print(new_price)
+        return new_price
 
     @staticmethod
     def _get_duration(link_soup):

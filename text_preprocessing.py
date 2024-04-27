@@ -24,3 +24,10 @@ def preprocess_text(text):
 def remove_punct(text):
     text = re.sub(r'[^\w\s]', '', text)
     return text
+
+
+def extract_price(text):
+    numbers = re.findall(r'\d+', text)
+    number = int(''.join(numbers))
+    return number
+
