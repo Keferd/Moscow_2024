@@ -42,7 +42,7 @@ class ParsingManager:
 
                     course = {
                         "link": link_url,
-                        "tittle": self._get_tittle(link_soup),
+                        "name": self._get_tittle(link_soup),
                         "skills": self._get_skills(link_soup),
                         "text": self._get_text(link_soup),
                         "formats": self._get_formats(),
