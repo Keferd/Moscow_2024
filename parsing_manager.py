@@ -1,7 +1,7 @@
 import requests
 import pickle
 from bs4 import BeautifulSoup
-from text_preprocessing import preprocess_text, remove_punct, extract_price, heuristic_skills_processing
+from text_preprocessing import preprocess_text, remove_punct, extract_number, clear_description
 from const import KEY_SKILLS
 
 
@@ -24,22 +24,7 @@ class ParsingManager:
             self._courses = self._get_parsing_courses_data(self.url)
         return self._courses
 
-    def _load_cache(self):
-        try:
-            with open(self._cache_file, "rb") as f:
-                return pickle.load(f)
-        except FileNotFoundError:
-            return None
-
-    def _save_cache(self, data):
-        with open(self._cache_file, "wb") as f:
-            pickle.dump(data, f)
-
     def _get_parsing_courses_data(self, url):
-        courses = self._load_cache()
-        if courses:
-            return courses
-
         response = requests.get(url)
         courses = []
 
@@ -57,19 +42,24 @@ class ParsingManager:
                     if link_url == "https://gb.ru/geek_university/engineer/blockchain":
                         continue
 
-                    course = {
-                        "link": link_url,
-                        "tittle": self._get_tittle(link_soup),
-                        "skills": self._get_skills(link_soup),
-                        "text": self._get_text(link_soup),
-                        "formats": self._get_formats(),
-                        "duration": self._get_duration(link_soup),
-                        "price": self._get_price(link_soup),
-                        "description": self._get_description(link_soup)
-                    }
+                    tittle = self._get_tittle(link_soup)
+                    for course in courses:
+                        if course["name"] == tittle:
+                            break
+                    else:
+                        course = {
+                            "link": link_url,
+                            "name": tittle,
+                            "skills": self._get_skills(link_soup),
+                            "text": self._get_text(link_soup),
+                            "formats": self._get_formats(),
+                            "duration": self._get_duration(link_soup),
+                            "price": self._get_price(link_soup),
+                            "description": self._get_description(link_soup)
+                        }
 
-                    courses.append(course)
-        self._save_cache(courses)
+                        courses.append(course)
+
         return courses
 
     @staticmethod
@@ -122,8 +112,9 @@ class ParsingManager:
 
             for span in spans:
                 if span.text.strip() != 'и другие':
-                    skills.add(span.text.strip())
-
+                    skill = span.text.strip()
+                    if skill in KEY_SKILLS:
+                        skills.add(span.text.strip())
         return skills
 
     @staticmethod
@@ -138,7 +129,7 @@ class ParsingManager:
             description = div.get_text(separator=" ", strip=True)
             if description and "Длительность" not in description:
                 break
-        return description
+        return clear_description(description)
 
     @staticmethod
     def _get_tittle(link_soup):
@@ -148,7 +139,6 @@ class ParsingManager:
                 or "promo__title" in x))
 
         tittle = [div.get_text(separator=" ", strip=True) for div in key_tittle]
-        print(tittle[0])
         return tittle[0]
 
     @staticmethod
@@ -159,8 +149,7 @@ class ParsingManager:
                 or "price__value" in x))
 
         price = [div.get_text(separator=" ", strip=True) for div in key_price]
-        new_price = extract_price(price[0])
-        print(new_price)
+        new_price = extract_number(price[0])
         return new_price
 
     @staticmethod
@@ -172,7 +161,7 @@ class ParsingManager:
         duration = [div.get_text(separator=" ", strip=True) for div in key_duration]
         if not duration:
             return None
-        return duration[0]
+        return extract_number(duration[0])
 
     @staticmethod
     def _get_formats():

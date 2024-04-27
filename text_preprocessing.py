@@ -26,12 +26,19 @@ def remove_punct(text):
     return text
 
 
-def extract_price(text):
-    numbers = re.findall(r'\d+', text)
-    number = int(''.join(numbers))
-    return number
+def extract_number(text):
+    for elem in text.split():
+        if elem.isdigit():
+            return elem
 
 def heuristic_skills_processing(text):
     text = text.replace("C/C++", "C C++")
     return text
 
+
+def clear_description(text):
+    text = text.replace('• ', '', 1)
+    text = text.replace('— ', '', 1)
+    text = re.sub(r' •', '.', text)
+    text = re.sub(r' —', '.', text)
+    return text
