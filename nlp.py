@@ -26,7 +26,7 @@ def complex_compare(vacancy_text: str, vacancy_skills: set[str], course_text: st
 
     result = {
         'final_score': score,
-        'skills_score': skills_set_similarity * 100
+        'skills_score': round(skills_set_similarity * 100, 2)
     }
     return result
 

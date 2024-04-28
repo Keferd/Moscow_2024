@@ -125,25 +125,44 @@ function changeSorting(sorting, courses) {
 
 
 
+var dt = new DataTransfer();
+
+let photo
+
+function handleFileChange(event) {
+    let fileNameDisplay = document.getElementById('filetext');
+    let fileInput = event.target;
+    photo = fileInput.files[0];
+
+    console.log(photo.name);
+
+    if (photo) {
+
+        // document.querySelector(".main__in__photo-name").textContent = photo.name;
+        document.getElementById("filetext").textContent = photo.name;
+
+        // let reader = new FileReader();
+        // reader.onload = function(e) {
+        //     document.querySelector(".main__in__photo").src = e.target.result;
+        // };
+        // reader.readAsDataURL(photo);
+
+        fileload(event);
+    } else {
+        fileNameDisplay.textContent = '';
+    }
+}
 
 
-
-
-
-
-
-
-
-
-let sendfilebtn = document.getElementById("send_link_btn");
-
-sendfilebtn.addEventListener("click", function (e) {
+function fileload(e) {
     e.preventDefault();
+    console.log("CHECK")
     
-    link_vacancy = document.getElementById("link_vacancy").value
-    let formdata = JSON.stringify({link_vacancy: link_vacancy});
 
-    if (typeof link_vacancy != 'undefined') {
+    let formdata = new FormData();
+    formdata.append('file', photo);
+
+    if (typeof photo != 'undefined') {
         document.getElementById("main__result-container").innerHTML = `
             <div class="img__container">
                 <img class="img__loading" src="static/img/loading.png" alt="loading">
@@ -176,14 +195,15 @@ sendfilebtn.addEventListener("click", function (e) {
             </style>
         `;
         
+        console.log("fetch");
 
-        fetch("/api/link",
+        fetch("/api/file",
         {
             method: "POST",
             body: formdata,
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            /*headers: {
+                'Content-Type': 'multipart/form-data'
+            }*/
         })
         .then( response => {
             response.json().then(function(data) {
@@ -444,4 +464,4 @@ sendfilebtn.addEventListener("click", function (e) {
         //     </div>
         // `
     }
-});
+};

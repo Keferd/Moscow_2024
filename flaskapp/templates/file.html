@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moscow2024</title>
-    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="static/file.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -18,20 +18,34 @@
     </header>
     <main>
         <div class="main__column">
+
+
+
+
             <div class="main__entry__container main__container">
                 <div class="main__entry__title main__title">
                     Для начала работы:
                 </div>
                 <div class="main__entry__label">
-                    Введите ссылку на вакансию:
+                    Введите файл с вакансией:
                 </div>
-                <div class="main__entry__field">
-                    <input class="main__entry__text" type="text" id="link_vacancy" placeholder="Ссылка на вакансию...">
-                    <button class="main__entry__button" id="send_link_btn">
-                        Запустить
-                    </button>
-                </div>
+                <label for="fileInput" class="fileInputLabel">
+                    <div class="filetext" id="filetext">Выберите файл...</div>
+                    <div class="filebutton">Загрузить</div>
+                </label>
+                <input type="file" id="fileInput" class="fileInput" onchange="handleFileChange(event)">
+                <div id="fileNameDisplay" class="fileNameDisplay"></div>
+                <div id="status"></div>
             </div>
+
+
+
+
+
+
+
+
+
             <div class="main__filters__container main__container">
                 <div class="main__title">
                     Фильтры:
@@ -154,6 +168,6 @@
     </style>
 
     
-    <script src="static/js/linksend.js"></script>
+    <script src="static/js/filesend.js"></script>
 </body>
 </html>

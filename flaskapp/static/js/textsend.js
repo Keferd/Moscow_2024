@@ -177,7 +177,7 @@ sendfilebtn.addEventListener("click", function (e) {
         `;
         
 
-        fetch("/api/link",
+        fetch("/api/text",
         {
             method: "POST",
             body: formdata,
