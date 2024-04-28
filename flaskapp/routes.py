@@ -11,6 +11,16 @@ from utils import get_json_data
 def index():
     return render_template('index.html')
 
+
+@app.route('/file')
+def file():
+    return render_template('file.html')
+
+
+@app.route('/text')
+def text():
+    return render_template('text.html')
+
 @app.route('/api/link', methods=['POST'])
 def post_link():
     try:
@@ -19,6 +29,21 @@ def post_link():
         if url:
             response_data = get_json_data(url)
             return response_data
+
+        else:
+            return "Ой-йой, что-то пошло не так", 400
+
+    except Exception as e:
+        print("error:", e)
+        return str(e), 500
+    
+@app.route('/api/file', methods=['POST'])
+def post_file():
+    try:
+        file = request.files["file"]
+
+        if file:
+            print("file")
 
         else:
             return "Ой-йой, что-то пошло не так", 400
