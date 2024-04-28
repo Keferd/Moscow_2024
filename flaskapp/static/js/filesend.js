@@ -263,6 +263,20 @@ function fileload(e) {
                 // ------------------------------ ЗАВЕРШЕНИЕ СБОРКИ HTML ВЫВОДА ----------------------------------------
 
                 document.getElementById("main__result-container").innerHTML = newhtml
+
+                function delNoRel(co) {
+                    let new_co = {}
+
+                    for (var courseId in co) {
+                        if (50 <= Number(co[courseId].accuracy)) {
+                            new_co[courseId] = co[courseId];
+                        }
+                    }
+                    
+                    return new_co
+                }
+
+                courses = delNoRel(courses)
             
                 courses = changeSorting(document.getElementById("main__search-overlay__select").value, courses)
 
