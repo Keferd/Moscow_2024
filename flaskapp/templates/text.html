@@ -31,14 +31,12 @@
                     Для начала работы:
                 </div>
                 <div class="main__entry__label">
-                    Введите ссылку на вакансию:
+                    Введите текст вакансии:
                 </div>
-                <div class="main__entry__field">
-                    <input class="main__entry__text" type="text" id="link_vacancy" placeholder="Ссылка на вакансию...">
-                    <button class="main__entry__button" id="send_link_btn">
-                        Запустить
-                    </button>
-                </div>
+                <textarea class="main__entry__text" type="text" id="link_vacancy" oninput="autoResize()">Текст вакансии...</textarea>
+                <button class="main__entry__button" id="send_link_btn">
+                    Запустить
+                </button>
             </div>
 
 
@@ -167,6 +165,13 @@
     </style>
 
     
-    <script src="static/js/linksend.js"></script>
+    <script src="static/js/textsend.js"></script>
+    <script>
+        function autoResize() {
+            const textarea = document.getElementById('link_vacancy');
+            textarea.style.height = 'auto'; // Сбросим высоту в auto, чтобы textarea могла измениться в соответствии с содержимым
+            textarea.style.height = textarea.scrollHeight + 'px'; // Установим высоту textarea равной его высоте прокрутки, чтобы вместить весь текст
+        }
+    </script>
 </body>
 </html>

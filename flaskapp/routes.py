@@ -51,6 +51,21 @@ def post_file():
     except Exception as e:
         print("error:", e)
         return str(e), 500
+    
+@app.route('/api/text', methods=['POST'])
+def post_text():
+    try:
+        text = request.json['link_vacancy']
+
+        if text:
+            print(text)
+
+        else:
+            return "Ой-йой, что-то пошло не так", 400
+
+    except Exception as e:
+        print("error:", e)
+        return str(e), 500
 
 def json_response(data, code=200):
     return Response(status=code, mimetype="application/json", response=json.dumps(data))
