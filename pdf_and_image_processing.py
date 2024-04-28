@@ -56,24 +56,19 @@ def get_text_from_combination_of_image(folder_path):
 
 
 
-
-# прописать путь для сохранения изображений
-output_folder = "extracted_images"
-
-
-def get_text_from_giga_pdf(pdf):
+def get_text_from_giga_pdf(pdf, image_folder):
     text_from_pdf = get_text_from_pdf(pdf)
     if not text_from_pdf.strip():
-        get_images_from_pdf(pdf, output_folder)
-        text_from_pdf_prokl = get_text_from_combination_of_image(output_folder)
+        get_images_from_pdf(pdf, image_folder)
+        text_from_pdf_prokl = get_text_from_combination_of_image(image_folder)
         return text_from_pdf_prokl
     else:
         return text_from_pdf
 
 
-res1 = get_text_from_image("LamodaGroup.png")
-res2 = get_text_from_giga_pdf("LamodaGroup.pdf")
-res3 = get_text_from_giga_pdf("LamodaGroup2.pdf")
-print(res1)
-print(res2)
-print(res3)
+# res1 = get_text_from_image("LamodaGroup.png")
+# res2 = get_text_from_giga_pdf("LamodaGroup.pdf")
+# res3 = get_text_from_giga_pdf("LamodaGroup2.pdf")
+# print(res1)
+# print(res2)
+# print(res3)

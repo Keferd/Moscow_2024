@@ -3,7 +3,7 @@ import os
 from flaskapp import app
 from flask import render_template, make_response, request, Response, jsonify, json, session, redirect, url_for, send_file
 import json
-from utils import get_json_data
+from utils import get_json_data, get_json_data_text, get_json_data_file
 
 
 @app.route('/')
@@ -41,9 +41,9 @@ def post_link():
 def post_file():
     try:
         file = request.files["file"]
-
         if file:
-            print("file")
+            response_data = get_json_data_file(file=file)
+            return response_data
 
         else:
             return "Ой-йой, что-то пошло не так", 400
@@ -58,7 +58,8 @@ def post_text():
         text = request.json['link_vacancy']
 
         if text:
-            print(text)
+            response_data = get_json_data_text(raw_text=text)
+            return response_data
 
         else:
             return "Ой-йой, что-то пошло не так", 400
