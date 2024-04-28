@@ -74,6 +74,28 @@ function changeSorting(sorting, courses) {
             });
 
             break;
+        case 'skills':
+            dict_f = {}
+
+            coursesArray.forEach(function(item, key, coursesArray) {
+                dict_f[key] = item.skills_accuracy;
+            });
+
+            
+            // Преобразование объекта в массив пар ключ-значение и сортировка по значениям
+            var sortedKeys = Object.keys(dict_f).sort(function(a, b) {
+                return dict_f[a] - dict_f[b];
+            });
+
+            sortedKeys.reverse();
+
+            i = 0
+            coursesArray.forEach(function(item, key, coursesArray) {
+                new_courses[i] = coursesArray[sortedKeys[i]]
+                i = i + 1;
+            });
+
+            break;
         case 'cheap':
             coursesArray.sort((a, b) => parseInt(a.price) - parseInt(b.price));
 
@@ -205,6 +227,7 @@ sendfilebtn.addEventListener("click", function (e) {
                     <div class="main__search-overlay__select__container">
                         <select class="main__search-overlay__select" id="main__search-overlay__select">
                             <option value='relevant' selected>Сначала подходящие</option>
+                            <option value='skills'>Сначала по навыкам</option>
                             <option value='cheap'>Сначала дешевле</option>
                             <option value='expensive'>Сначала дороже</option>
                         </select>
@@ -248,7 +271,10 @@ sendfilebtn.addEventListener("click", function (e) {
                                 <div class="main__list-of-courses__partition"></div>
                                 <div class="main__list-of-courses__right">
                                     <div class="main__list-of-courses__right__title">
-                                        Подходит на: <span style="color: ` + getColorFromGradient(courses[i].accuracy) + `">` + courses[i].accuracy + `%</span>
+                                        Подходит по описанию на: <span style="color: ` + getColorFromGradient(courses[i].accuracy) + `">` + courses[i].accuracy + `%</span>
+                                    </div>
+                                    <div style="font-size: 16px; " class="main__list-of-courses__right__title">
+                                        Подходит по навыкам на: <span style="color: ` + getColorFromGradient(courses[i].skills_accuracy) + `">` + courses[i].skills_accuracy + `%</span>
                                     </div>
                                     <div class="main__list-of-courses__right__partition"></div>
                                     <div class="main__list-of-courses__right__subtitle">Совпадение по навыкам:</div>
@@ -345,14 +371,14 @@ sendfilebtn.addEventListener("click", function (e) {
                     if (filtered_courses != courses){
                         constructionListOfCourses(filtered_courses);
 
-                        document.getElementById("main__search-overlay__title").innerHTML = `Подходящие курсы ` + Object.keys(filtered_courses).length + `:`;
+                        document.getElementById("main__search-overlay__title").innerHTML = `Подходящие курсы (` + Object.keys(filtered_courses).length + `):`;
                     }
                 }
 
 
                 filtered_courses = changeSorting(document.getElementById("main__search-overlay__select").value, changeFormats(changePrice(courses)));
                 constructionListOfCourses(filtered_courses);
-                document.getElementById("main__search-overlay__title").innerHTML = `Подходящие курсы ` + Object.keys(changeFormats(filtered_courses)).length + `:`;
+                document.getElementById("main__search-overlay__title").innerHTML = `Подходящие курсы (` + Object.keys(changeFormats(filtered_courses)).length + `):`;
 
                 document.getElementById("main__search-overlay__select").addEventListener("change", function() {
                     // courses = changeSorting(document.getElementById("main__search-overlay__select").value, courses)
