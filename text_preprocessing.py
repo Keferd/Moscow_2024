@@ -23,7 +23,7 @@ def preprocess_text(text):
 
 def remove_punct(text):
     # text = re.sub(r'[^\w\s-]', '', text)
-    text = re.sub(r'(?!\bC\+\+\b)([^\w\s+-])', '', text)
+    text = re.sub(r'(?<!\bC\+\+)(?<!\bC#)([^\w\s+#-])', '', text)
     return text
 
 
